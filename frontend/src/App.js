@@ -35,50 +35,6 @@ const App = () => {
     dispatch(initializeUser())
     dispatch(initializeAllUsers())
   }, [dispatch])
-  /*
-  const dispatch = useDispatch()
-
-  useEffect(() => {
-    dispatch(initializeBlogs())
-    dispatch(initializeUser())
-    dispatch(initializeAllUsers())
-  }, [dispatch])
-  */
-
-
-  /* const Home = () => {
-    return (
-      <div>
-        <h1>Blogs App</h1>
-        <AddBlogForm />
-        <BlogList />
-      </div>
-    )
-  } */
-
-  /* const Blogs = () => {
-    return (
-      <div>
-        <h2>Blogs</h2>
-        <BlogList />
-      </div>
-    )
-  } */
-
-  /* const handleLogout = async (event) => {
-    event.preventDefault()
-    dispatch( logout() )
-  } */
-
-  /*  const match = useMatch('/blogs/:id')
-  console.log('blogid', match.params.id)
-  const blog = match? blogs.find(blog => blog.id === String(match.params.id)) : null
-
-  console.log('blog', blog)
-
-  if (!blog) {
-    return null
-  } */
 
   return (
     <div className='container'>
@@ -95,14 +51,5 @@ const App = () => {
     </div>
   )
 }
-
-/*
-  <Topbar />
-  <notificaton />
-  <Route path='/users' element={<UserDisplay />} />
-  <Route path='/blogs' element={<Blogs />} />
-  <Route path="/users/:id" element={<EachUser />} />
-  <Route path="/blogs/:id" element={<EachBlog />} />
-*/
 
 export default App

@@ -38,12 +38,3 @@ export default function Post({ blog }) {
     </div>
   )
 }
-
-/*
-{isPhotoUrl ? (
-        <img className="postImg" src={blog.photo} alt="" />
-      ) : (
-        <img className="postImg" src={`/images/${blog.photo}`} alt="" />
-      )}
-
-*/
