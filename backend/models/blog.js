@@ -9,7 +9,13 @@ const blogSchema = new mongoose.Schema({
 		type: String,
 		required: true
 	},
-	photo: String,
+	photo: {
+		public_id: {
+			type: String,
+		},
+		url: {
+			type: String,
+		}},
 	categories: Array,
 	likes: Number,
 	user: {

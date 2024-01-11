@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './singlePost.css'
 import { useSelector, useDispatch } from 'react-redux'
 import { deleteBlogs, updateBlogs } from '../../reducers/blogReducer'
@@ -7,21 +7,30 @@ import { setNotification } from '../../reducers/notificationReducer'
 import { useNavigate } from 'react-router-dom'
 
 export default function SinglePost({ blog }) {
-  const isPhotoUrl = blog.photo.startsWith('https')
+  //const isPhotoUrl = blog.photo.startsWith('https')
   const authUser = useSelector(state => state.auth)
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const notification = useSelector((state) => state.notifications)
+
+  useEffect(() => {
+    if (notification) {
+      // Reload the page when there is a new blog post and notification
+      window.location.reload()
+    }
+  }, [notification])
+
 
   const [isEditing, setIsEditing] = useState(false)
   const [editedTitle, setEditedTitle] = useState(blog.title)
   const [editedDesc, setEditedDesc] = useState(blog.desc)
 
   const handleDelete = () => {
-    if (window.confirm(`Remove blog ${blog.title} by ${blog.user.username}`)) {
+    if (window.confirm(`Are you sure to remove blog ${blog.title} by ${blog.user.username}?`)) {
       dispatch(deleteBlogs(blog.id))
       dispatch(setNotification(`You deleted "${blog.title}" !`, 5))
       navigate('/')
-      window.location.reload()
+      window.location.reload
     }
   }
 
@@ -48,11 +57,12 @@ export default function SinglePost({ blog }) {
   return (
     <div className="singlePost">
       <div className="singlePostWrapper">
-        {isPhotoUrl ? (
+        {/* {isPhotoUrl ? (
           <img className="singlePostImg" src={blog.photo} alt="" />
         ) : (
           <img className="singlePostImg" src={`/images/${blog.photo}`} alt="" />
-        )}
+        )} */}
+        <img className="singlePostImg" src={blog?.photo?.url} alt="" />
         <h1 className="singlePostTitle">
           {isEditing ?
             <>

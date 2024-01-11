@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt')
 const usersRouter = require('express').Router()
 const User = require('../models/user')
+const cloudinary = require('../utils/cloudinary.js')
 
 //get all users
 usersRouter.get('/', async (req, res) => {
@@ -25,30 +26,45 @@ usersRouter.get('/:id', async (req, res) => {
 
 //UPDATE
 usersRouter.put('/:id', async (req, res) => {
-	if (req.body.id === req.params.id) {
+	try {
 
-		if (req.body.password) {
-			const salt = await bcrypt.genSalt(10)
-			req.body.password = await bcrypt.hash(req.body.password, salt)
-		}
+		const { id, password, profilePic, ...rest } = req.body
 
-		try {
-			const updatedUser = await User.findByIdAndUpdate(
+		if (id === req.params.id) {
+
+			if (password) {
+				const salt = await bcrypt.genSalt(10)
+				req.body.password = await bcrypt.hash(req.body.password, salt)
+			}
+
+			let updatedUser = { ...rest }
+
+			if (profilePic) {
+				const result = await cloudinary.uploader.upload(profilePic, {
+					folder: 'bloglist',
+				})
+
+				updatedUser.profilePic = {
+					public_id: result.public_id,
+					url: result.secure_url,
+				}
+			}
+
+			updatedUser = await User.findByIdAndUpdate(
 				req.params.id,
-				{ $set: req.body },
+				{ $set: updatedUser },
 				{ new: true }
 			)
 
 			res.status(200).json(updatedUser)
 
-		} catch (err) {
-
-			res.status(500).json(err)
-
+		} else {
+			res.status(401).json('You can only update your account')
 		}
+	} catch (err) {
 
-	} else {
-		res.status(401).json('You can only update your account')
+		res.status(500).json(err)
+
 	}
 })
 

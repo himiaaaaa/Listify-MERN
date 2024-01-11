@@ -12,8 +12,8 @@ const commentsRouter = require('./controllers/comments')
 const middleware = require('./utils/middleware')
 const logger = require('./utils/logger')
 const mongoose = require('mongoose')
-const multer = require('multer')
-const path = require('path')
+//const multer = require('multer')
+//const path = require('path')
 mongoose.set('strictQuery', false)
 
 logger.info('connecting to', config.MONGODB_URI)
@@ -27,24 +27,24 @@ mongoose
 		logger.error('error connecting to MongoDB:', error.message)
 	})
 
-const storage = multer.diskStorage({
-	destination: (req, file, callback) => {
-		callback(null, 'public/Images')
-	},
-	filename: (req, file, callback) => {
-		callback(null, file.fieldname + '_' + Date.now() + path.extname(file.originalname))
-	},
-})
+// const storage = multer.diskStorage({
+// 	destination: (req, file, callback) => {
+// 		callback(null, 'public/Images')
+// 	},
+// 	filename: (req, file, callback) => {
+// 		callback(null, file.fieldname + '_' + Date.now() + path.extname(file.originalname))
+// 	},
+// })
 
-const upload = multer({ storage: storage })
+//const upload = multer({ storage: storage })
 
-app.use(express.static(__dirname + '/public'))
-app.use('/images', express.static('Images'))
+// app.use(express.static(__dirname + '/public'))
+// app.use('/images', express.static('Images'))
   
-app.post('/api/upload', upload.single('file'), (req, res) => {
-	console.log(req.file)
-	res.status(200).json(req.file.filename)
-})
+// app.post('/api/upload', upload.single('file'), (req, res) => {
+// 	console.log(req.file)
+// 	res.status(200).json(req.file.filename)
+// })
 
 app.use(cors())
 app.use(express.static('build'))
