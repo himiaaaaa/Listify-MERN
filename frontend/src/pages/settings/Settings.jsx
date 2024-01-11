@@ -6,7 +6,7 @@ import { updateUsers } from '../../reducers/userReducer'
 import { useNavigate } from 'react-router-dom'
 import { logout } from '../../reducers/authReducer'
 import { deleteUsers } from '../../reducers/userReducer'
-import axios from 'axios'
+//import axios from 'axios'
 
 export default function Settings() {
   const dispatch = useDispatch()
@@ -17,19 +17,36 @@ export default function Settings() {
   const [editedUsername, setEditedUsername] = useState(authUser.username)
   const [editedEmail, setEditedEmail] = useState(authUser.email)
   const [editedPassword, setEditedPassword] = useState('')
-  const [file, setFile] = useState(null)
+  //const [file] = useState(null)
+  const [image, setImage] = useState([])
 
-  const upload = async () => {
-    try {
-      const formData = new FormData()
-      formData.append('file', file)
+  // const upload = async () => {
+  //   try {
+  //     const formData = new FormData()
+  //     formData.append('file', file)
 
-      const res = await axios.post('/api/upload', formData)
-      console.log('resdata', res.data)
-      return res.data
+  //     const res = await axios.post('/api/upload', formData)
+  //     console.log('resdata', res.data)
+  //     return res.data
 
-    } catch (err) {
-      console.log(err)
+  //   } catch (err) {
+  //     console.log(err)
+  //   }
+  // }
+
+  const handleImage = (e) => {
+    const file = e.target.files[0]
+    setFileToBase(file)
+    console.log('imagefile', file)
+  }
+
+  console.log('image', image)
+
+  const setFileToBase = (file) => {
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onloadend = () => {
+      setImage(reader.result)
     }
   }
 
@@ -37,8 +54,8 @@ export default function Settings() {
 
     e.preventDefault()
 
-    const imgUrl = await upload()
-    console.log('userimgurl', imgUrl)
+    //const imgUrl = await upload()
+    //console.log('userimgurl', imgUrl)
 
     const updatedUser = {
       ...authUser,
@@ -46,10 +63,10 @@ export default function Settings() {
       username: editedUsername,
       email: editedEmail,
       password: editedPassword,
-      profilePic: file ? imgUrl : authUser.profilePic
+      profilePic: image ? image : authUser?.profilePic?.url
     }
 
-    console.log('file', file)
+    //console.log('file', file)
 
     dispatch(updateUsers(updatedUser))
 
@@ -78,16 +95,8 @@ export default function Settings() {
         <form className="settingsForm">
           <label>Profile Picture</label>
           <div className="settingsPP">
-            {file ? <img
-              src={URL.createObjectURL(file)} //create a temporary URL for the uploaded image file
-              alt=""
-            />
-              :
-              <img
-                src={`/images/${authUser.profilePic}`}
-                alt=""
-              />
-            }
+            <img src={image.length === 0 ? authUser.profilePic : image }alt="" />
+
             <label htmlFor="fileInput">
               <i className="settingsPPIcon far fa-user-circle"></i>{' '}
             </label>
@@ -96,7 +105,7 @@ export default function Settings() {
               type="file"
               style={{ display: 'none' }}
               className="settingsPPInput"
-              onChange={(e) => setFile(e.target.files[0])}
+              onChange={handleImage}
             />
           </div>
           <label>Username</label>
@@ -131,3 +140,15 @@ export default function Settings() {
     </div>
   )
 }
+
+
+// {file ? <img
+//   src={URL.createObjectURL(file)} //create a temporary URL for the uploaded image file
+//   alt=""
+// />
+//   :
+//   <img
+//     src={`/images/${authUser.profilePic}`}
+//     alt=""
+//   />
+// }
