@@ -63,8 +63,18 @@ export default function SinglePost({ blog }) {
     }
 
     dispatch(updateBlogs(updatedBlog))
-    dispatch(setNotification('Blog updated successfully!', 5))
-    window.location.reload()
+      .then(() => {
+        setEditedTitle(updatedBlog.title)
+        setEditedDesc(updatedBlog.desc)
+
+        setIsEditing(false)
+
+        dispatch(setNotification('Blog updated successfully!', 5))
+      })
+      .catch((error) => {
+        console.error('Error updating blog:', error)
+      })
+      //dispatch(setNotification('Blog updated successfully!', 5))
   }
 
   return (
@@ -76,6 +86,13 @@ export default function SinglePost({ blog }) {
           <img className="singlePostImg" src={`/images/${blog.photo}`} alt="" />
         )} */}
         <img className="singlePostImg" src={blog?.photo?.url} alt="" />
+        {notification && (
+          <div>
+            <div className="alert alert-danger" role="alert">
+              {notification}
+            </div>
+          </div>
+        )}
         <h1 className="singlePostTitle">
           {isEditing ?
             <>
