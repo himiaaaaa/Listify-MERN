@@ -1,10 +1,14 @@
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import Header from '../../components/header/Header'
 import Posts from '../../components/posts/Posts'
 import Sidebar from '../../components/sidebar/Sidebar'
 import './home.css'
 import { useEffect } from 'react'
+import { initializeBlogs } from '../../reducers/blogReducer'
+import { initializeUser } from '../../reducers/authReducer'
+import { initializeAllUsers } from '../../reducers/userReducer'
+import { initializeCategories } from '../../reducers/categoryReducer'
 
 export default function Homepage() {
   const blogs = useSelector(state => state.blogs)
@@ -14,13 +18,21 @@ export default function Homepage() {
   const category = searchParams.get('cat')
   const username = searchParams.get('username')
   const notification = useSelector(state => state.notifications)
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (notification) {
-      // Reload the page when there is a new blog post and notification
-      window.location.reload()
+      dispatch(initializeBlogs())
     }
   }, [notification])
+
+  useEffect(() => {
+    dispatch(initializeBlogs())
+    dispatch(initializeCategories())
+    dispatch(initializeUser())
+    dispatch(initializeAllUsers())
+
+  }, [dispatch])
 
   console.log('query name', category, username)
 

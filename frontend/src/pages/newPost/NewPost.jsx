@@ -1,5 +1,5 @@
 import './newPost.css'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { createBlog } from '../../reducers/blogReducer'
 import { setNotification } from '../../reducers/notificationReducer'
@@ -47,7 +47,7 @@ export default function NewPost() {
     }
   }
 
-  const handleNewBlog = (e) => {
+  const handleNewBlog = async(e) => {
 
     e.preventDefault()
 
@@ -66,16 +66,16 @@ export default function NewPost() {
     }
 
     dispatch(createBlog(createdBlog))
-    dispatch(setNotification(`a new blog ${title} by ${authUser.username} added`, 5))
     navigate('/')
+    dispatch(setNotification(`a new blog ${title} by ${authUser.username} added`, 5))
   }
 
-  useEffect(() => {
-    if (notification) {
-      // Reload the page when there is a new blog post and notification
-      window.location.reload()
-    }
-  }, [notification])
+  // useEffect(() => {
+  //   if (notification) {
+  //     // Reload the page when there is a new blog post and notification
+  //     window.location.reload(true)
+  //   }
+  // }, [notification])
 
   return (
     <div className="newPost">
