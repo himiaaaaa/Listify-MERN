@@ -2,9 +2,12 @@ import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import './singlePost.css'
 import { useSelector, useDispatch } from 'react-redux'
-import { deleteBlogs, updateBlogs } from '../../reducers/blogReducer'
+import { deleteBlogs, initializeBlogs, updateBlogs } from '../../reducers/blogReducer'
 import { setNotification } from '../../reducers/notificationReducer'
 import { useNavigate } from 'react-router-dom'
+import { initializeAllUsers } from '../../reducers/userReducer'
+import { initializeCategories } from '../../reducers/categoryReducer'
+import { initializeUser } from '../../reducers/authReducer'
 
 export default function SinglePost({ blog }) {
   //const isPhotoUrl = blog.photo.startsWith('https')
@@ -15,10 +18,18 @@ export default function SinglePost({ blog }) {
 
   useEffect(() => {
     if (notification) {
-      // Reload the page when there is a new blog post and notification
-      window.location.reload()
+      dispatch(initializeBlogs())
+      //window.location.reload()
     }
   }, [notification])
+
+  useEffect(() => {
+    dispatch(initializeBlogs())
+    dispatch(initializeCategories())
+    dispatch(initializeUser())
+    dispatch(initializeAllUsers())
+
+  }, [dispatch])
 
 
   const [isEditing, setIsEditing] = useState(false)
@@ -28,9 +39,8 @@ export default function SinglePost({ blog }) {
   const handleDelete = () => {
     if (window.confirm(`Are you sure to remove blog ${blog.title} by ${blog.user.username}?`)) {
       dispatch(deleteBlogs(blog.id))
-      dispatch(setNotification(`You deleted "${blog.title}" !`, 5))
       navigate('/')
-      window.location.reload
+      dispatch(setNotification(`You deleted "${blog.title}" !`, 5))
     }
   }
 
@@ -50,8 +60,8 @@ export default function SinglePost({ blog }) {
     }
 
     dispatch(updateBlogs(updatedBlog))
-
-    window.location.reload()
+    dispatch(setNotification('Blog updated successfully!', 5))
+    //window.location.reload()
   }
 
   return (
