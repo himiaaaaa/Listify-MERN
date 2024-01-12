@@ -20,6 +20,9 @@ export default function SinglePost({ blog }) {
     if (notification) {
       dispatch(initializeBlogs())
       //window.location.reload()
+      dispatch(initializeCategories())
+      dispatch(initializeUser())
+      dispatch(initializeAllUsers())
     }
   }, [notification])
 
@@ -61,7 +64,7 @@ export default function SinglePost({ blog }) {
 
     dispatch(updateBlogs(updatedBlog))
     dispatch(setNotification('Blog updated successfully!', 5))
-    //window.location.reload()
+    window.location.reload()
   }
 
   return (
