@@ -35,4 +35,16 @@ To deploy using Docker Compose, run the following command:
 
 This will start the application in detached mode.
 
+## screenshots
+
+![Screenshots](https://res.cloudinary.com/dxnmrthvk/image/upload/v1705146359/sociify%20screenshot/sociify%20screenshot/listify%20screenshot/register_gbbrac.png)
+
+![Screenshots](https://res.cloudinary.com/dxnmrthvk/image/upload/v1705146354/sociify%20screenshot/sociify%20screenshot/listify%20screenshot/login_waev00.png)
+
+![Screenshots](https://res.cloudinary.com/dxnmrthvk/image/upload/v1705146355/sociify%20screenshot/sociify%20screenshot/listify%20screenshot/homepage_ryhzjq.png)
+
+![Screenshots](https://res.cloudinary.com/dxnmrthvk/image/upload/v1705146351/sociify%20screenshot/sociify%20screenshot/listify%20screenshot/create_post_rgjwas.png)
+
+![Screenshots](https://res.cloudinary.com/dxnmrthvk/image/upload/v1705146354/sociify%20screenshot/sociify%20screenshot/listify%20screenshot/user_profile_nffz0p.png)
+
   
