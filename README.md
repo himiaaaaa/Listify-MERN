@@ -16,6 +16,10 @@ Live at: https://listify-31cu.onrender.com
 
 - **Category Filtering:**
   - Explore blog posts by clicking on categories.
+
+- **User Account Management:**
+  - Update user account information.
+  - Delete user account.
     
 ## GitHub Actions
 
