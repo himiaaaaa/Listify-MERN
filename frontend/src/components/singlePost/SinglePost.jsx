@@ -1,27 +1,49 @@
 import { Link } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './singlePost.css'
 import { useSelector, useDispatch } from 'react-redux'
-import { deleteBlogs, updateBlogs } from '../../reducers/blogReducer'
+import { deleteBlogs, initializeBlogs, updateBlogs } from '../../reducers/blogReducer'
 import { setNotification } from '../../reducers/notificationReducer'
 import { useNavigate } from 'react-router-dom'
+import { initializeAllUsers } from '../../reducers/userReducer'
+import { initializeCategories } from '../../reducers/categoryReducer'
+import { initializeUser } from '../../reducers/authReducer'
 
 export default function SinglePost({ blog }) {
-  const isPhotoUrl = blog.photo.startsWith('http')
+  //const isPhotoUrl = blog.photo.startsWith('https')
   const authUser = useSelector(state => state.auth)
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const notification = useSelector((state) => state.notifications)
+
+  useEffect(() => {
+    if (notification) {
+      dispatch(initializeBlogs())
+      //window.location.reload()
+      dispatch(initializeCategories())
+      dispatch(initializeUser())
+      dispatch(initializeAllUsers())
+    }
+  }, [notification])
+
+  useEffect(() => {
+    dispatch(initializeBlogs())
+    dispatch(initializeCategories())
+    dispatch(initializeUser())
+    dispatch(initializeAllUsers())
+
+  }, [dispatch])
+
 
   const [isEditing, setIsEditing] = useState(false)
   const [editedTitle, setEditedTitle] = useState(blog.title)
   const [editedDesc, setEditedDesc] = useState(blog.desc)
 
   const handleDelete = () => {
-    if (window.confirm(`Remove blog ${blog.title} by ${blog.user.username}`)) {
+    if (window.confirm(`Are you sure to remove blog ${blog.title} by ${blog.user.username}?`)) {
       dispatch(deleteBlogs(blog.id))
-      dispatch(setNotification(`You deleted "${blog.title}" !`, 5))
       navigate('/')
-      window.location.reload()
+      dispatch(setNotification(`You deleted "${blog.title}" !`, 5))
     }
   }
 
@@ -41,17 +63,35 @@ export default function SinglePost({ blog }) {
     }
 
     dispatch(updateBlogs(updatedBlog))
+      .then(() => {
+        setEditedTitle(updatedBlog.title)
+        setEditedDesc(updatedBlog.desc)
 
-    window.location.reload()
+        setIsEditing(false)
+
+        dispatch(setNotification('Blog updated successfully!', 5))
+      })
+      .catch((error) => {
+        console.error('Error updating blog:', error)
+      })
+      //dispatch(setNotification('Blog updated successfully!', 5))
   }
 
   return (
     <div className="singlePost">
       <div className="singlePostWrapper">
-        {isPhotoUrl ? (
+        {/* {isPhotoUrl ? (
           <img className="singlePostImg" src={blog.photo} alt="" />
         ) : (
-          <img className="singlePostImg" src={`../upload/${blog.photo}`} alt="" />
+          <img className="singlePostImg" src={`/images/${blog.photo}`} alt="" />
+        )} */}
+        <img className="singlePostImg" src={blog?.photo?.url} alt="" />
+        {notification && (
+          <div>
+            <div className="alert alert-danger" role="alert">
+              {notification}
+            </div>
+          </div>
         )}
         <h1 className="singlePostTitle">
           {isEditing ?
@@ -65,9 +105,9 @@ export default function SinglePost({ blog }) {
             </>
             :
             <>
-              {blog.title}
+              {blog && blog.title}
 
-              {authUser && blog.user.username === authUser.username &&
+              {authUser && authUser.username && blog && blog.user && blog.user.username === authUser.username &&
               <div className="singlePostEdit">
                 <i className="singlePostIcon far fa-edit" onClick={handleEditBtn}></i>
                 <i className="singlePostIcon far fa-trash-alt" onClick={handleDelete}></i>

@@ -19,12 +19,14 @@ services:
     volumes:
       - ./backend:/usr/src/app
       - /usr/src/app/node_modules
+      - ./backend/public/Images:/usr/src/app/public/Images
     container_name: bloglist-backend-dev 
 
   nginx:
     image: nginx:1.20.1
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./backend/public/Images:/usr/src/app/public/Images
     ports:
       - 8080:80
     container_name: bloglist-reverse-proxy

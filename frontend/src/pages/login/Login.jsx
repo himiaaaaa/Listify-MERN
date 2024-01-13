@@ -24,6 +24,7 @@ export default function Login() {
     const { username, password } = formValue
 
     dispatch(login(username, password))
+    navigate('/')
   }
 
   return (

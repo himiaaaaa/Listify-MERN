@@ -26,11 +26,6 @@ jobs:
           - name: lint
             run: npm run lint && cd ../frontend && npm run eslint
 
-          - name: Run docker-compose
-            uses: isbang/compose-action@v1.5.1
-            env:
-              MONGODB_URI: ${{ secrets.MONGODB_URI }}
-
           - name: Check build
             run: npm run build:ui
 
@@ -45,6 +40,11 @@ jobs:
               github_deployment: false # Create a GitHub deployment. Optional
               deployment_environment: 'production' # GitHub deployment enviroment name. Optional
               github_token: false # Remove if github_deployment is false. Optional 
+
+          - name: Run docker-compose
+            uses: isbang/compose-action@v1.5.1
+            env:
+              MONGODB_URI: ${{ secrets.MONGODB_URI }}
           
 
 

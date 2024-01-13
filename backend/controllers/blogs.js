@@ -2,6 +2,7 @@ const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
 //const Comment = require('../models/comment')
+const cloudinary = require('../utils/cloudinary.js')
 
 //get blogs
 blogsRouter.get('/', async (req, res) => {
@@ -64,7 +65,8 @@ blogsRouter.get('/:id', async (req, res) => {
 
 //create post
 blogsRouter.post('/', async (request, response) => {
-	const body = request.body
+
+	const { title, desc, photo, likes, categories } = request.body
 
 	const user = request.user //using middleware of userExtractor and tokenExtractor
 
@@ -72,16 +74,23 @@ blogsRouter.post('/', async (request, response) => {
 		return response.status(401).json({ error: 'token missing or invalid' })
 	}
 
+	const result = await cloudinary.uploader.upload(photo, {
+		folder: 'bloglist',
+	})
+
 	const blog = new Blog({
-		title: body.title,
-		desc: body.desc,
-		photo: body.photo,
-		likes: body.likes ?? 0,
+		title: title,
+		desc: desc,
+		photo: {
+			public_id: result.public_id,
+			url: result.secure_url,
+		},
+		likes: likes ?? 0,
 		user: user.id,
-		categories: body.categories ?? ''
+		categories: categories ?? ''
 	})
 	//comment: comment._id ?? ''
-	if (body.title === undefined) {
+	if (title === undefined) {
 
 		response.status(400).end()
 
